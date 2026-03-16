@@ -1,16 +1,32 @@
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "SensorTag",
-      "type": "ccs-debug",
-      "request": "launch",
-      "projectInfo": {
-        "name": "SensorTag",
-        "resourceId": "/SensorTag"
-      }
-    }
-  ]
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "rfPacketTx_CC1350STK_tirtos_ccs",
+            "type": "ccs-debug",
+            "request": "launch",
+            "projectInfo": {
+                "name": "rfPacketTx_CC1350STK_tirtos_ccs",
+                "resourceId": "/rfPacketTx_CC1350STK_tirtos_ccs"
+            }
+        },
+        {
+            "name": "tirtos_builds_CC1350STK_release_ccs",
+            "type": "ccs-debug",
+            "request": "launch",
+            "projectInfo": {
+                "name": "tirtos_builds_CC1350STK_release_ccs",
+                "resourceId": "/tirtos_builds_CC1350STK_release_ccs"
+            }
+        },
+        {
+            "name": "rfPacketRx_CC1350_LAUNCHXL_tirtos_ccs",
+            "type": "ccs-debug",
+            "request": "launch",
+            "projectInfo": {
+                "name": "rfPacketRx_CC1350_LAUNCHXL_tirtos_ccs",
+                "resourceId": "/rfPacketRx_CC1350_LAUNCHXL_tirtos_ccs"
+            }
+        }
+    ]
 }
