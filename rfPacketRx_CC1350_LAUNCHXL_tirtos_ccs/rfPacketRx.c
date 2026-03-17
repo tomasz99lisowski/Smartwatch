@@ -48,6 +48,18 @@
 #include "RFQueue.h"
 #include "smartrf_settings/smartrf_settings.h"
 
+/* Dispaly libraries*/
+
+#include <ti/display/Display.h>
+#include <ti/display/DisplayUart.h>
+#include <ti/display/DisplayExt.h>
+#include <ti/display/AnsiColor.h>
+    
+#include <ti/devices/DeviceFamily.h>
+#include <ti/display/Display.h>
+#include <ti/grlib/grlib.h>
+#include <ti/drivers/GPIO.h>
+
 /***** Defines *****/
 
 /* Packet RX Configuration */
@@ -71,6 +83,13 @@ static RF_Handle rfHandle;
 /* Pin driver handle */
 static PIN_Handle ledPinHandle;
 static PIN_State ledPinState;
+
+/* Display variables*/
+Display_Handle hLcd;
+Graphics_Context* context;
+bool packetReceived;
+uint8_t rxBuffer[64];
+uint8_t rxLen;
 
 /* Buffer which contains all Data Entries for receiving data.
  * Pragmas are needed to make sure this buffer is 4 byte aligned (requirement from the RF Core) */
@@ -101,6 +120,7 @@ static dataQueue_t dataQueue;
 static rfc_dataEntryGeneral_t* currentDataEntry;
 static uint8_t packetLength;
 static uint8_t* packetDataPointer;
+int line = 0;
 
 
 static uint8_t packet[MAX_LENGTH + NUM_APPENDED_BYTES - 1]; /* The length byte is stored in a separate variable */
@@ -122,6 +142,25 @@ void *mainThread(void *arg0)
     RF_Params rfParams;
     RF_Params_init(&rfParams);
 
+    Board_init();
+    GPIO_init();
+    Display_init();
+
+    Display_Params params;
+    Display_Params_init(&params);
+    params.lineClearMode = DISPLAY_CLEAR_BOTH;
+    hLcd = Display_open(Display_Type_LCD, &params);
+    //Display_printf(hLcd, 0, 0, "RX:");
+
+    
+
+    if (hLcd) {
+ 
+        context = DisplayExt_getGraphicsContext(hLcd);
+        
+        
+
+    }
     /* Open LED pins */
     ledPinHandle = PIN_open(&ledPinState, pinTable);
     if (ledPinHandle == NULL)
@@ -243,13 +282,65 @@ void *mainThread(void *arg0)
             while(1);
     }
 
-    while(1);
+    while(1) {
+
+        line = 0;
+
+        if (packetReceived) {
+            packetReceived = false;
+
+            uint8_t *ptr = packet;
+
+            uint16_t lux;
+            float temp;
+            float humid;
+            float press;
+            int stepCount;
+
+            /* Lux */
+            lux = ptr[0] | (ptr[1] << 8);
+            ptr += 2;
+
+            /* Temperature */
+            memcpy(&temp, ptr, sizeof(float));
+            ptr += 4;
+
+            /* Humidity */
+            memcpy(&humid, ptr, sizeof(float));
+            ptr += 4;
+
+            /* Pressure */
+            memcpy(&press, ptr, sizeof(float));
+            ptr += 4;
+
+            /* Acceleration */
+            // memcpy(&ax, ptr, sizeof(float)); ptr += 4;
+            // memcpy(&ay, ptr, sizeof(float)); ptr += 4;
+            // memcpy(&az, ptr, sizeof(float)); ptr += 4;
+
+            memcpy(&stepCount, ptr, sizeof(int));
+            ptr += 4;
+
+            Display_printf(hLcd, 0, 0, "\033[H");
+            Display_printf(hLcd, 0, 0, "Lux: %u", lux);
+            Display_printf(hLcd, 1, 0, "Temp: %.2f C", temp);
+            Display_printf(hLcd, 2, 0, "Hum: %.2f %%", humid);
+            Display_printf(hLcd, 3, 0, "Press: %.2f hPa", press);
+            Display_printf(hLcd, 4, 0, "Steps: %d", stepCount);
+
+            //line++;
+            RF_runCmd(rfHandle, (RF_Op*)&RF_cmdPropRx,
+                                               RF_PriorityNormal, &callback,
+                                               RF_EventRxEntryDone);
+        }
+    };
 }
 
 void callback(RF_Handle h, RF_CmdHandle ch, RF_EventMask e)
-{
+{   
     if (e & RF_EventRxEntryDone)
     {
+        
         /* Toggle pin to indicate RX */
         PIN_setOutputValue(ledPinHandle, Board_PIN_LED2,
                            !PIN_getOutputValue(Board_PIN_LED2));
@@ -263,9 +354,15 @@ void callback(RF_Handle h, RF_CmdHandle ch, RF_EventMask e)
         packetLength      = *(uint8_t*)(&currentDataEntry->data);
         packetDataPointer = (uint8_t*)(&currentDataEntry->data + 1);
 
+        
         /* Copy the payload + the status byte to the packet variable */
         memcpy(packet, packetDataPointer, (packetLength + 1));
 
         RFQueue_nextEntry();
+    
+        packetReceived = true;
+
+        RF_cancelCmd(h, ch, 0);
+
     }
 }

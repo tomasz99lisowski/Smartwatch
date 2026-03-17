@@ -125,7 +125,7 @@ static PIN_State ledPinState;
 
 static uint8_t packet[PAYLOAD_LENGTH];
 static uint16_t seqNumber;
-float stepCount = 0;
+int stepCount = 0;
 
 
 /***** Variable declarations *****/
@@ -571,10 +571,12 @@ void *mainThread(void *arg0)
         ptr += 4;
 
         // --- Acceleration (float ax, ay, az) ---
-        memcpy(ptr, &latestAccelerationAdcValue[0], sizeof(float)); ptr += 4;
-        memcpy(ptr, &latestAccelerationAdcValue[1], sizeof(float)); ptr += 4;
-        memcpy(ptr, &latestAccelerationAdcValue[2], sizeof(float)); ptr += 4;
+        // memcpy(ptr, &latestAccelerationAdcValue[0], sizeof(float)); ptr += 4;
+        // memcpy(ptr, &latestAccelerationAdcValue[1], sizeof(float)); ptr += 4;
+        // memcpy(ptr, &latestAccelerationAdcValue[2], sizeof(float)); ptr += 4;
 
+        memcpy(ptr, &stepCount, sizeof(int));
+        ptr += 4;
 
 
         /* Send packet */

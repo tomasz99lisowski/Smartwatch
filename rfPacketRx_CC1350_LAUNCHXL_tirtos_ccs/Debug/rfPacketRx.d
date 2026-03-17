@@ -46,6 +46,16 @@ rfPacketRx.obj: C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/devices/cc13x0/
 rfPacketRx.obj: ../RFQueue.h
 rfPacketRx.obj: C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/devices/cc13x0/driverlib/rf_data_entry.h
 rfPacketRx.obj: ../smartrf_settings/smartrf_settings.h
+rfPacketRx.obj: C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/display/Display.h
+rfPacketRx.obj: C:/ti/ti-cgt-arm_18.12.5.LTS/include/stdarg.h
+rfPacketRx.obj: C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/display/DisplayUart.h
+rfPacketRx.obj: C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/drivers/UART.h
+rfPacketRx.obj: C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/display/DisplayExt.h
+rfPacketRx.obj: C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/grlib/grlib.h
+rfPacketRx.obj: C:/ti/ti-cgt-arm_18.12.5.LTS/include/assert.h
+rfPacketRx.obj: C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/display/AnsiColor.h
+rfPacketRx.obj: C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/grlib/grlib.h
+rfPacketRx.obj: C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/drivers/GPIO.h
 
 ../rfPacketRx.c:
 
@@ -138,4 +148,24 @@ C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/devices/cc13x0/inc/hw_gpio.h:
 C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/devices/cc13x0/driverlib/rf_data_entry.h:
 
 ../smartrf_settings/smartrf_settings.h:
+
+C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/display/Display.h:
+
+C:/ti/ti-cgt-arm_18.12.5.LTS/include/stdarg.h:
+
+C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/display/DisplayUart.h:
+
+C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/drivers/UART.h:
+
+C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/display/DisplayExt.h:
+
+C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/grlib/grlib.h:
+
+C:/ti/ti-cgt-arm_18.12.5.LTS/include/assert.h:
+
+C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/display/AnsiColor.h:
+
+C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/grlib/grlib.h:
+
+C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/drivers/GPIO.h:
 
