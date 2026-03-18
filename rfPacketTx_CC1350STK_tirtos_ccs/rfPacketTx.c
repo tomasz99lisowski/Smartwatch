@@ -190,23 +190,34 @@ PIN_Config buttonPinTable[] = {
 uint32_t lastStepTime = 0;
 
 double t = 0;
+double dynamicAcc = 0;
+float latestAccXValue = 0;
+float currentAccXValue = 0;
+double threshold = 0.004;
 
 void countSteps(float ax, float ay, float az) {
 
     //Take only 2-axis movment under consideration
 
     double totalAcc = sqrt(ax*ax + az*az);
-    double restAcc = 0.007;
-    double dynamicAcc = totalAcc - 0.001;
-
-    t = totalAcc;
+    //double restAcc = 0.007;
+    dynamicAcc = totalAcc;
+    currentAccXValue = latestAccelerationAdcValue[0];
+    double diffX = sqrt((latestAccXValue - currentAccXValue) * (latestAccXValue - currentAccXValue));
 
     uint32_t time = Clock_getTicks();
 
-    if (totalAcc > 0.02 && (time - lastStepTime) > 300) {
-        stepCount++;
-        lastStepTime = time;
+
+    if (diffX > threshold) {
+        if (dynamicAcc > 0.01 && (time - lastStepTime) > 300) {
+            stepCount++;
+            latestAccXValue = currentAccXValue;
+            lastStepTime = time;
+        }
     }
+
+
+    
 
 }
 
@@ -463,6 +474,11 @@ static void updateDisplay(void)
     Display_printf(hDisplaySerial, 7, 0, "AccX: %.2f g", latestAccelerationAdcValue[0]);
     Display_printf(hDisplaySerial, 8, 0, "AccY: %.2f g", latestAccelerationAdcValue[1]);
     Display_printf(hDisplaySerial, 9, 0, "AccZ: %.2f g", latestAccelerationAdcValue[2]);
+
+    Display_printf(hDisplaySerial, 10, 0, "Steps: %d", stepCount);
+    Display_printf(hDisplaySerial, 11, 0, "Steps: %lf", dynamicAcc);
+
+    
 
 }
 
