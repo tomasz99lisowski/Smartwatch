@@ -111,7 +111,7 @@
 #define PACKET_INTERVAL     500000  /* Set packet interval to 500000us or 500ms */
 #endif
 
-
+#define DEVICE_ID 1
 
 /***** Prototypes *****/
 
@@ -215,9 +215,6 @@ void countSteps(float ax, float ay, float az) {
             lastStepTime = time;
         }
     }
-
-
-    
 
 }
 
@@ -429,7 +426,7 @@ static void nodeTaskFunction(UArg arg0, UArg arg1)
 
 
             /* Send ADC value to concentrator */
-            NodeRadioTask_sendAdcData(latestLuxAdcValue);
+            NodeRadioTask_sendAdcData(DEVICE_ID);
             NodeRadioTask_sendAdcData(latestTempLocalAdcValue);
             NodeRadioTask_sendAdcData(latestHumidAdcValue);
             NodeRadioTask_sendAdcData(latestPressAdcValue);
@@ -594,7 +591,7 @@ void *mainThread(void *arg0)
         memcpy(ptr, &stepCount, sizeof(int));
         ptr += 4;
 
-
+    // TODO: ADD SLEEP
         /* Send packet */
         RF_EventMask terminationReason = RF_runCmd(rfHandle, (RF_Op*)&RF_cmdPropTx,
                                                    RF_PriorityNormal, NULL, 0);

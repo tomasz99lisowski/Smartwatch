@@ -59,6 +59,8 @@
 #include <ti/display/Display.h>
 #include <ti/grlib/grlib.h>
 #include <ti/drivers/GPIO.h>
+#include <ti/drivers/UART.h>
+#include <stdio.h>
 
 /***** Defines *****/
 
@@ -137,20 +139,35 @@ PIN_Config pinTable[] =
 
 /***** Function definitions *****/
 
+static int userStepCounts[2] = {0,0};
+
 void *mainThread(void *arg0)
 {
     RF_Params rfParams;
     RF_Params_init(&rfParams);
 
+    UART_Handle uart;
+    UART_Params uartParams;
+
     Board_init();
     GPIO_init();
     Display_init();
+    UART_init();
 
     Display_Params params;
-    Display_Params_init(&params);
-    params.lineClearMode = DISPLAY_CLEAR_BOTH;
-    hLcd = Display_open(Display_Type_LCD, &params);
+    //Display_Params_init(&params);
+    //params.lineClearMode = DISPLAY_CLEAR_BOTH;
+    //hLcd = Display_open(Display_Type_UART, &params);
     //Display_printf(hLcd, 0, 0, "RX:");
+
+    UART_Params_init(&uartParams);
+    uartParams.writeDataMode = UART_DATA_BINARY;
+    uartParams.readDataMode = UART_DATA_BINARY;
+    uartParams.readReturnMode = UART_RETURN_FULL;
+    uartParams.readEcho = UART_ECHO_OFF;
+    uartParams.baudRate = 115200;
+
+    uart = UART_open(Board_UART0, &uartParams);
 
     
 
@@ -287,18 +304,19 @@ void *mainThread(void *arg0)
         line = 0;
 
         if (packetReceived) {
+            char message[256];
             packetReceived = false;
 
             uint8_t *ptr = packet;
 
-            uint16_t lux;
+            uint16_t id;
             float temp;
             float humid;
             float press;
             int stepCount;
 
-            /* Lux */
-            lux = ptr[0] | (ptr[1] << 8);
+            /* id */
+            id = ptr[0] | (ptr[1] << 8);
             ptr += 2;
 
             /* Temperature */
@@ -321,12 +339,15 @@ void *mainThread(void *arg0)
             memcpy(&stepCount, ptr, sizeof(int));
             ptr += 4;
 
-            Display_printf(hLcd, 0, 0, "\033[H");
-            Display_printf(hLcd, 0, 0, "Lux: %u", lux);
-            Display_printf(hLcd, 1, 0, "Temp: %.2f C", temp);
+            //Display_printf(hLcd, 0, 0, "\033[H");
+            /*
+            Display_printf(hLcd, 0, 0, "id: %u", id);
+            Display_printf(hLcd, 1, 0, "Temp: %.2f C", temp);v
             Display_printf(hLcd, 2, 0, "Hum: %.2f %%", humid);
-            Display_printf(hLcd, 3, 0, "Press: %.2f hPa", press);
-            Display_printf(hLcd, 4, 0, "Steps: %d", stepCount);
+            Display_printf(hLcd, 3, 0, "Press: %.2f hPa", press);*/
+
+            sprintf(message, "{'User': %d, 'Steps': %d}", id, stepCount);
+            UART_write(uart, message, 256);
 
             //line++;
             RF_runCmd(rfHandle, (RF_Op*)&RF_cmdPropRx,

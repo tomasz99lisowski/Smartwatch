@@ -27,6 +27,6 @@
 -l"ti/drivers/rf/lib/rf_multiMode_cc13x0.aem3"
 -l"ti/drivers/lib/drivers_cc13x0.aem3"
 -l"ti/dpl/lib/dpl_cc13x0.aem3"
--l"C:/Users/Tomasz/Desktop/Tomek/Erasmus/Smartwatch/tirtos_builds_CC1350STK_release_ccs/Debug/configPkg/linker.cmd"
+-l"C:/Users/nikod/Desktop/Smartwatch/tirtos_builds_CC1350STK_release_ccs/Debug/configPkg/linker.cmd"
 -l"ti/devices/cc13x0/driverlib/bin/ccs/driverlib.lib"
 -llibc.a

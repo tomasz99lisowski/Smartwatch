@@ -6,8 +6,8 @@ SHELL = cmd.exe
 
 CG_TOOL_ROOT := C:/ti/ti-cgt-arm_18.12.5.LTS
 
-GEN_OPTS__FLAG := --cmd_file="C:/Users/Tomasz/Desktop/Tomek/Erasmus/Smartwatch/tirtos_builds_CC1350STK_release_ccs/Debug/configPkg/compiler.opt" 
-GEN_CMDS__FLAG := -l"C:/Users/Tomasz/Desktop/Tomek/Erasmus/Smartwatch/tirtos_builds_CC1350STK_release_ccs/Debug/configPkg/linker.cmd" 
+GEN_OPTS__FLAG := --cmd_file="C:/Users/nikod/Desktop/Smartwatch/tirtos_builds_CC1350STK_release_ccs/Debug/configPkg/compiler.opt" 
+GEN_CMDS__FLAG := -l"C:/Users/nikod/Desktop/Smartwatch/tirtos_builds_CC1350STK_release_ccs/Debug/configPkg/linker.cmd" 
 
 ORDERED_OBJS += \
 "./CC1350STK.obj" \
@@ -169,10 +169,10 @@ all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@$(MAKE) --no-print-directory -Onone "rfPacketTx_CC1350STK_tirtos_ccs.out"
 
 dependents:
-	-cd C:/Users/Tomasz/Desktop/Tomek/Erasmus/Smartwatch/tirtos_builds_CC1350STK_release_ccs/Debug && $(MAKE) all
+	-cd C:/Users/nikod/Desktop/Smartwatch/tirtos_builds_CC1350STK_release_ccs/Debug && $(MAKE) all
 
 # Tool invocations
-rfPacketTx_CC1350STK_tirtos_ccs.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS) C:/Users/Tomasz/Desktop/Tomek/Erasmus/Smartwatch/tirtos_builds_CC1350STK_release_ccs/Debug/tirtos_builds_CC1350STK_release_ccs.lib
+rfPacketTx_CC1350STK_tirtos_ccs.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS) C:/Users/nikod/Desktop/Smartwatch/tirtos_builds_CC1350STK_release_ccs/Debug/tirtos_builds_CC1350STK_release_ccs.lib
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: Arm Linker'
 	"C:/ti/ti-cgt-arm_18.12.5.LTS/bin/armcl" -mv7M3 --code_state=16 --float_support=vfplib -me --define=DeviceFamily_CC13X0 --define=CCFG_FORCE_VDDR_HH=0 --define=SUPPORT_PHY_CUSTOM --define=SUPPORT_PHY_50KBPS2GFSK --define=SUPPORT_PHY_625BPSLRM --define=SUPPORT_PHY_5KBPSSLLR -g --diag_warning=225 --diag_warning=255 --diag_wrap=off --display_error_number --gen_func_subsections=on -z -m"rfPacketTx_CC1350STK_tirtos_ccs.map" -i"C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source" -i"C:/ti/simplelink_cc13x0_sdk_4_20_02_07/kernel/tirtos/packages" -i"C:/ti/ti-cgt-arm_18.12.5.LTS/lib" --diag_wrap=off --display_error_number --warn_sections --xml_link_info="rfPacketTx_CC1350STK_tirtos_ccs_linkInfo.xml" --rom_model -o "rfPacketTx_CC1350STK_tirtos_ccs.out" $(ORDERED_OBJS)
@@ -189,7 +189,7 @@ clean:
 
 .PHONY: all clean dependents
 .SECONDARY:
-C:/Users/Tomasz/Desktop/Tomek/Erasmus/Smartwatch/tirtos_builds_CC1350STK_release_ccs/Debug/tirtos_builds_CC1350STK_release_ccs.lib:
+C:/Users/nikod/Desktop/Smartwatch/tirtos_builds_CC1350STK_release_ccs/Debug/tirtos_builds_CC1350STK_release_ccs.lib:
 
 -include ../makefile.targets
 

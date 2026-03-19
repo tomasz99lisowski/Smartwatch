@@ -7,5 +7,5 @@
 #       or equal to the generated config header
 #
 linker.cmd: package/cfg/release_pem3.xdl
-	$(SED) 's"^\"\(package/cfg/release_pem3cfg.cmd\)\"$""\"C:/Users/Tomasz/Desktop/Tomek/Erasmus/Smartwatch/tirtos_builds_CC1350_LAUNCHXL_release_ccs/Debug/configPkg/\1\""' package/cfg/release_pem3.xdl > $@
+	$(SED) 's"^\"\(package/cfg/release_pem3cfg.cmd\)\"$""\"C:/Users/nikod/Desktop/Smartwatch/tirtos_builds_CC1350_LAUNCHXL_release_ccs/Debug/configPkg/\1\""' package/cfg/release_pem3.xdl > $@
 	-$(SETDATE) -r:max package/cfg/release_pem3.h compiler.opt compiler.opt.defs

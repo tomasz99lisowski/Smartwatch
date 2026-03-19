@@ -9,8 +9,8 @@
  */
 
 
--l"C:\Users\Tomasz\Desktop\Tomek\Erasmus\Smartwatch\tirtos_builds_CC1350_LAUNCHXL_release_ccs\Debug\configPkg\package\cfg\release_pem3.oem3"
--l"C:\Users\Tomasz\Desktop\Tomek\Erasmus\Smartwatch\tirtos_builds_CC1350_LAUNCHXL_release_ccs\src\sysbios\rom_sysbios.aem3"
+-l"C:\Users\nikod\Desktop\Smartwatch\tirtos_builds_CC1350_LAUNCHXL_release_ccs\Debug\configPkg\package\cfg\release_pem3.oem3"
+-l"C:\Users\nikod\Desktop\Smartwatch\tirtos_builds_CC1350_LAUNCHXL_release_ccs\src\sysbios\rom_sysbios.aem3"
 -l"C:\ti\simplelink_cc13x0_sdk_4_20_02_07\kernel\tirtos\packages\ti\targets\arm\rtsarm\lib\boot.aem3"
 -l"C:\ti\simplelink_cc13x0_sdk_4_20_02_07\kernel\tirtos\packages\ti\targets\arm\rtsarm\lib\auto_init.aem3"
 -l"C:\ti\xdctools_3_51_03_28_core\packages\xdc\rov\runtime\lib\xdc.rov.runtime.aem3"
