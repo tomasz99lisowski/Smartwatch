@@ -56,6 +56,7 @@ rfPacketRx.obj: C:/ti/ti-cgt-arm_18.12.5.LTS/include/assert.h
 rfPacketRx.obj: C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/display/AnsiColor.h
 rfPacketRx.obj: C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/grlib/grlib.h
 rfPacketRx.obj: C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/drivers/GPIO.h
+rfPacketRx.obj: C:/ti/ti-cgt-arm_18.12.5.LTS/include/stdio.h
 
 ../rfPacketRx.c:
 
@@ -168,4 +169,6 @@ C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/display/AnsiColor.h:
 C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/grlib/grlib.h:
 
 C:/ti/simplelink_cc13x0_sdk_4_20_02_07/source/ti/drivers/GPIO.h:
+
+C:/ti/ti-cgt-arm_18.12.5.LTS/include/stdio.h:
 

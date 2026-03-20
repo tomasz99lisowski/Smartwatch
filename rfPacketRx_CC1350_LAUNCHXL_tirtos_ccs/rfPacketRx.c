@@ -59,6 +59,9 @@
 #include <ti/display/Display.h>
 #include <ti/grlib/grlib.h>
 #include <ti/drivers/GPIO.h>
+#include <ti/drivers/UART.h>
+#include <stdio.h>
+
 
 /***** Defines *****/
 
@@ -86,6 +89,7 @@ static PIN_State ledPinState;
 
 /* Display variables*/
 Display_Handle hLcd;
+Display_Handle hUART;
 Graphics_Context* context;
 bool packetReceived;
 uint8_t rxBuffer[64];
@@ -122,7 +126,6 @@ static uint8_t packetLength;
 static uint8_t* packetDataPointer;
 int line = 0;
 
-
 static uint8_t packet[MAX_LENGTH + NUM_APPENDED_BYTES - 1]; /* The length byte is stored in a separate variable */
 
 /*
@@ -137,6 +140,9 @@ PIN_Config pinTable[] =
 
 /***** Function definitions *****/
 
+UART_Handle uart;
+UART_Params uartParams;
+
 void *mainThread(void *arg0)
 {
     RF_Params rfParams;
@@ -145,15 +151,24 @@ void *mainThread(void *arg0)
     Board_init();
     GPIO_init();
     Display_init();
+    UART_init();
 
     Display_Params params;
     Display_Params_init(&params);
     params.lineClearMode = DISPLAY_CLEAR_BOTH;
     hLcd = Display_open(Display_Type_LCD, &params);
+    hUART = Display_open(Display_Type_UART, &params);
     //Display_printf(hLcd, 0, 0, "RX:");
+/*
+    UART_Params_init(&uartParams);
+    uartParams.writeDataMode = UART_DATA_BINARY;
+    uartParams.readDataMode = UART_DATA_BINARY;
+    uartParams.readReturnMode = UART_RETURN_FULL;
+    uartParams.readEcho = UART_ECHO_OFF;
+    uartParams.baudRate = 115200;
 
-    
-
+    uart = UART_open(Board_UART0, &uartParams);
+*/
     if (hLcd) {
  
         context = DisplayExt_getGraphicsContext(hLcd);
@@ -291,14 +306,14 @@ void *mainThread(void *arg0)
 
             uint8_t *ptr = packet;
 
-            uint16_t lux;
+            uint16_t deviceID;
             float temp;
             float humid;
             float press;
             int stepCount;
 
             /* Lux */
-            lux = ptr[0] | (ptr[1] << 8);
+            deviceID = ptr[0] | (ptr[1] << 8);
             ptr += 2;
 
             /* Temperature */
@@ -321,12 +336,33 @@ void *mainThread(void *arg0)
             memcpy(&stepCount, ptr, sizeof(int));
             ptr += 4;
 
-            Display_printf(hLcd, 0, 0, "\033[H");
-            Display_printf(hLcd, 0, 0, "Lux: %u", lux);
-            Display_printf(hLcd, 1, 0, "Temp: %.2f C", temp);
-            Display_printf(hLcd, 2, 0, "Hum: %.2f %%", humid);
-            Display_printf(hLcd, 3, 0, "Press: %.2f hPa", press);
-            Display_printf(hLcd, 4, 0, "Steps: %d", stepCount);
+            //Print to LCD
+
+            if (deviceID == 1) {
+
+                Display_printf(hLcd, 0, 0, "\033[H");
+                Display_printf(hLcd, 0, 0, "DeviceID: %u", deviceID);
+                Display_printf(hLcd, 1, 0, "Temp: %.2f C", temp);
+                Display_printf(hLcd, 2, 0, "Hum: %.2f %%", humid);
+                Display_printf(hLcd, 3, 0, "Press: %.2f hPa", press);
+                Display_printf(hLcd, 4, 0, "Steps: %d", stepCount);
+
+            } else if (deviceID == 2) {
+
+                Display_printf(hLcd, 6, 0, "\033[H");
+                Display_printf(hLcd, 6, 0, "DeviceID: %u", deviceID);
+                Display_printf(hLcd, 7, 0, "Temp: %.2f C", temp);
+                Display_printf(hLcd, 8, 0, "Hum: %.2f %%", humid);
+                Display_printf(hLcd, 9, 0, "Press: %.2f hPa", press);
+                Display_printf(hLcd, 10, 0, "Steps: %d", stepCount);
+            }
+            char message[256];
+
+            //Print to UART
+            //Display_printf(hUART, 0, 0, "\033[H");
+            Display_printf(hUART, 0, 0, "{'User': %d, 'Steps': %d}", deviceID, stepCount);
+            //sprintf(message, "{'User:' %d, 'Steps': %d}", deviceID, stepCount);
+            //UART_write(uart, message, 256); 
 
             //line++;
             RF_runCmd(rfHandle, (RF_Op*)&RF_cmdPropRx,

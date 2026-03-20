@@ -98,7 +98,7 @@
 #define NODE_ADCTASK_CHANGE_MASK                    0xFF0
 
 /* Minimum slow Report interval is 10s (in units of samplingTime)*/
-#define NODE_ADCTASK_REPORTINTERVAL_SLOW                10
+#define NODE_ADCTASK_REPORTINTERVAL_SLOW                1
 /* Minimum fast Report interval is 1s (in units of samplingTime) for 30s*/
 #define NODE_ADCTASK_REPORTINTERVAL_FAST                1
 #define NODE_ADCTASK_REPORTINTERVAL_FAST_DURATION_MS    30000
@@ -124,7 +124,7 @@ static PIN_Handle ledPinHandle;
 static PIN_State ledPinState;
 
 static uint8_t packet[PAYLOAD_LENGTH];
-static uint16_t seqNumber;
+//static uint16_t seqNumber;
 int stepCount = 0;
 
 
@@ -135,6 +135,7 @@ static uint8_t nodeTaskStack[NODE_TASK_STACK_SIZE];
 Event_Struct nodeEvent;  /* not static so you can see in ROV */
 static Event_Handle nodeEventHandle;
 static uint16_t latestLuxAdcValue;
+const static uint16_t deviceID = 2;
 float latestTempLocalAdcValue;
 float latestPressAdcValue;
 float latestHumidAdcValue;
@@ -190,18 +191,17 @@ PIN_Config buttonPinTable[] = {
 uint32_t lastStepTime = 0;
 
 double t = 0;
-double dynamicAcc = 0;
 float latestAccXValue = 0;
 float currentAccXValue = 0;
 double threshold = 0.004;
+double totalAcc = 0;
 
 void countSteps(float ax, float ay, float az) {
 
     //Take only 2-axis movment under consideration
 
-    double totalAcc = sqrt(ax*ax + az*az);
+    totalAcc = sqrt(ax*ax + az*az);
     //double restAcc = 0.007;
-    dynamicAcc = totalAcc;
     currentAccXValue = latestAccelerationAdcValue[0];
     double diffX = sqrt((latestAccXValue - currentAccXValue) * (latestAccXValue - currentAccXValue));
 
@@ -209,16 +209,12 @@ void countSteps(float ax, float ay, float az) {
 
 
     if (diffX > threshold) {
-        if (dynamicAcc > 0.01 && (time - lastStepTime) > 300) {
+        if (totalAcc > 0.01 && (time - lastStepTime) > 300) {
             stepCount++;
             latestAccXValue = currentAccXValue;
             lastStepTime = time;
         }
     }
-
-
-    
-
 }
 
 void NodeTask_init(void)
@@ -476,7 +472,7 @@ static void updateDisplay(void)
     Display_printf(hDisplaySerial, 9, 0, "AccZ: %.2f g", latestAccelerationAdcValue[2]);
 
     Display_printf(hDisplaySerial, 10, 0, "Steps: %d", stepCount);
-    Display_printf(hDisplaySerial, 11, 0, "Steps: %lf", dynamicAcc);
+    Display_printf(hDisplaySerial, 11, 0, "Acc: %lf", totalAcc);
 
     
 
@@ -570,8 +566,8 @@ void *mainThread(void *arg0)
         uint8_t *ptr = packet;
 
         // --- Lux (uint16_t) ---
-        ptr[0] = latestLuxAdcValue & 0xFF;
-        ptr[1] = (latestLuxAdcValue >> 8) & 0xFF;
+        ptr[0] = deviceID & 0xFF;
+        ptr[1] = (deviceID >> 8) & 0xFF;
         ptr += 2;
 
         // --- Temp (float) ---
